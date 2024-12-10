@@ -100,8 +100,8 @@ class Requ:
                 'Content-Type':'application/json'
             }
             data = {
-                "min_name_length" : 5,
-                "max_name_length" : 7
+                "name":self.firstnama+self.lastnama+str(random.randint(1000, 9999)),
+                "domain":random.choice(requests.get("https://api.internal.temp-mail.io/api/v4/domains", headers={"accept": "application/json, text/plain, */*"}).json()['domains'])['name']
             }
             response = self.ses.post('https://api.internal.temp-mail.io/api/v3/email/new',headers=headers,json=data,verify=False)
             self.mail = response.json()['email']
@@ -2279,6 +2279,7 @@ class Require:
 class Main:
   def __init__(self):
     self.xyz = requests.Session()
+    self.pwww = Console().input('[grey50]Masukan Password:  [green]')
     self.mail = Requ().createMail()
   
   def timer(self, seconds):
@@ -2641,8 +2642,14 @@ class Main:
         {}cookies{}: {}{}
     }}
 }}""".format(p, m, p, h, m, p, payloads, m, p, h, self.mail, m, p, h, kode, m, p, h, uid, p, m, p, h, uid, p, m, p, h, cookies))
-      with open("/sdcard/Mr/Facebook-Account/success.txt","a") as wr:
+      with open("success.txt","a") as wr:
         wr.write(f"{uid}|{self.firstnama} {self.lastnama}|{self.pw}|{self.mail}\n")
+        wr.close()
+
+      filename = f"successID{self.pw}.txt"
+      
+      with open(filename, "a") as wr:
+        wr.write(f"{uid}\n")
         wr.close()
     else:
       payloads = self.instance.ResponseAkun2()
@@ -2656,7 +2663,7 @@ class Main:
         {}url{}: {}https://www.facebook.com/{}{}
     }}
 }}""".format(p, m, p, k, m, p, payloads, m, p, k, self.mail, m, p, k, kode, m, p, k, uid, p, m, p, k, uid, p))
-      with open("/sdcard/Mr/Facebook-Account/create_facebook_invalid.txt","a") as wr:
+      with open("create_facebook_invalid.txt","a") as wr:
         wr.write(f"{uid}|{self.firstnama} {self.lastnama}|{self.pw}|{self.tgl}|{self.mail}|{kode}\n")
         wr.close()
         
