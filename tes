@@ -1,0 +1,147 @@
+import os, sys, requests, socks, urllib, json, random, re, socket
+from payloadsFB import Main
+from payloadsFB import MainV2
+from rich.console import Console
+from rich.panel import Panel
+
+class Requdable:
+    def Banner(self):
+        self.clear_terminalize()
+        Console().print('''[grey50]\r
+  _____             __      _______ 
+ / ___/______ ___ _/ /____ / __/ _ ) [white]Author : [green]XyraaCode Dev
+[red]/ /__/ __/ -_) _ `/ __/ -_) _// _  | [white]Status : [green]Premiun
+\\___/_/  \\__/_\\_,_/\\__/\\__/_/ /____/ [white]Version : [green]2.0                                                             \n''')
+        return (True)
+    
+    def __init__(self) -> None:
+        self.Banner()
+        print('[grey50][[green]01[grey50]] Auto create FB')
+        print('[grey50][[green]02[grey50]] Create FB manual')
+        querty = input('\n[grey50][[green]#[grey50]] Choose : ')
+        query = input('\n[grey50][[green]#[grey50]] Berapa akun di buat : ')
+        print('\n[grey50][[green]#[grey50]] Result OK/[green]create_facebook_success.txt\n[grey50][[red]#[grey50]] Result CP/[red]create_facebook_invalid.txt')
+        print('\n[grey50][[green]#[grey50]] Gunakan [red]Ctrl + Z[grey50] Untuk Berhenti!\n')
+        if querty =='1' or querty =='01':
+            try:
+                self.LoopingCreate(query)
+            except (Exception, KeyboardInterrupt) as e: exit()
+        elif querty =='2' or querty =='02':
+            try:
+                self.LoopingCreateV2(query)
+            except (Exception, KeyboardInterrupt) as e: exit()
+        else: exit()
+        
+    def clear_terminalize(self):
+        os.system('clear' if 'linux' in sys.platform.lower() else 'cls')
+        
+    def get_proxies(self):
+        with open('2500proxy.txt', 'r') as file:
+            proxies = [line.strip() for line in file.readlines()]
+        return proxies
+
+    def get_random_proxy(self, proxies):
+        proxy = random.choice(proxies)
+        return proxy
+
+    def set_socks4_proxy(self, proxy):
+        ip, port = proxy.split(':')
+        socks.set_default_proxy(socks.SOCKS4, ip, int(port))
+        socket.socket = socks.socksocket
+
+    def LoopingCreate(self, query):
+        proxies = self.get_proxies()
+        for response in range(int(query)):
+            success = False
+            while not success:
+                proxy = self.get_random_proxy(proxies)
+                self.set_socks4_proxy(proxy)
+                try:
+                    main = Main()
+                    main.Create_Nama()
+                    main.Response_Nama()
+                    main.Create_Birthday()
+                    main.Response_Birthday()
+                    main.Create_Gender()
+                    main.Response_Gender()
+                    main.Create_Email()
+                    main.Response_Email()
+                    main.Create_Password()
+                    main.Response_Password()
+                    main.Next_Response()
+                    cookie = main.Next_Konfirmasi()
+                    self.postFotoProfile(cookie)
+                    success = True
+                except (Exception, requests.exceptions.ConnectionError):
+                    print(f"Proxy {proxy} failed, trying another proxy.")
+                    continue
+            
+    def LoopingCreateV2(self, query):
+        proxies = self.get_proxies()
+        for response in range(int(query)):
+            success = False
+            while not success:
+                proxy = self.get_random_proxy(proxies)
+                self.set_socks4_proxy(proxy)
+                try:
+                    main = MainV2()
+                    main.Create_Nama()
+                    main.Response_Nama()
+                    main.Create_Birthday()
+                    main.Response_Birthday()
+                    main.Create_Gender()
+                    main.Response_Gender()
+                    main.Create_Email()
+                    main.Response_Email()
+                    main.Create_Password()
+                    main.Response_Password()
+                    main.Next_Response()
+                    cookie = main.Next_Konfirmasi()
+                    self.postFotoProfile(cookie)
+                    success = True
+                except (Exception, requests.exceptions.ConnectionError):
+                    print(f"Proxy {proxy} failed, trying another proxy.")
+                    continue
+
+    def postFotoProfile(self, cookie):
+        img = open('Data/foto.txt', 'r').read().splitlines() 
+        image_url = random.choice(img)
+        try:
+            with requests.Session() as r:
+                id = re.search('c_user=(\\d+)', str(cookie)).group(1)
+                req = r.get(f'https://web.facebook.com/profile.php?id={id}', cookies={'cookie': cookie}).text
+                params = self.config.DataGraphQL(req, id)
+                params.update({
+                    'profile_id': id,
+                    'photo_source': "57",
+                })
+                files = {'file':('image.jpg', urllib.request.urlopen(image_url).read())}
+                pos = r.post("https://web.facebook.com/profile/picture/upload/", cookies={'cookie': cookie}, params=params,  files=files).text
+                fbid = re.search('"fbid":"(\\d+)"', str(pos)).group(1)
+                data = self.config.DataGraphQL(req, id)
+                data.update({
+                    "fb_api_caller_class": "RelayModern",
+                    "fb_api_req_friendly_name": "ProfileCometProfilePictureSetMutation",
+                    "variables": json.dumps({"input":{"attribution_id_v2":"ProfileCometTimelineListViewRoot.react,comet.profile.timeline.list,via_cold_start,1729674295794,691444,190055527696468,,","caption":"","existing_photo_id":fbid,"expiration_time":None,"profile_id":id,"profile_pic_method":"EXISTING","profile_pic_source":"TIMELINE","scaled_crop_rect":{"height":1,"width":1,"x":0,"y":0},"skip_cropping": True,"actor_id":id,"client_mutation_id":"2"},"isPage":False,"isProfile":True,"sectionToken":"UNKNOWN","collectionToken":"UNKNOWN","scale":3,"__relay_internal__pv__ProfileGeminiIsCoinFlipEnabledrelayprovider":False}),
+                    "server_timestamps": "true",
+                    "doc_id": "28132579203008372"
+                })
+                post = r.post('https://web.facebook.com/api/graphql/', data=data, cookies={'cookie':cookie})
+                if 'profilePhoto' in post.text:
+                    return f"[bold green]Berhasil memperbarui foto profil[bold white]"
+                else:
+                    return f"[bold red]Gagal memperbarui foto profil[bold white]"
+                    
+        except Exception as e:
+            return f"[bold red]Gagal memperbarui foto profil[bold red]"
+
+if __name__ == "__main__":
+    Requdable()
+"""
+
+# Save the modified script to a file
+script_path = "/mnt/data/Run_with_socks4_proxy_and_post_photo_in_loop.py"
+with open(script_path, "w") as file:
+    file.write(script_content)
+
+script_path
